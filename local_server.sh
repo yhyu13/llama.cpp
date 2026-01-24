@@ -17,7 +17,10 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 ./build/bin/llama-server \
     -v \
     -m $MODEL_PATH \
-    -c 8192 \
+    -c 24000 \
     -cb \
+    --host 127.0.0.1 \
     --port 5051 \
-    -ngl $NGL_NUM
+    -ngl $NGL_NUM\
+    --parallel 1 \
+    --threads 16 \
