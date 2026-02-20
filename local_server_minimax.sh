@@ -17,7 +17,8 @@ conda activate llamacpp
 #MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q6_K_merge.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q8_0_merge.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Qwen3-Coder-Next-UD-Q3_K_XL.gguf
-MODEL_NAME=Qwen/Qwen3-Coder-Next-REAP-48B-A3B-MXFP4_MOE-GGUF/Qwen3-Coder-Next-REAP-48B-A3B-MXFP4_MOE.gguf
+MODEL_NAME=MinMax/BennyDaBall-MiniMax-M2.5-REAP-139B-A10B-MXFP4/MiniMax-M2.5-REAP-MXFP4_MOE-00001-of-00007.gguf
+#MODEL_NAME=MinMax/MiniMax-M2-REAP-172B-A10B-gguf-q2ks-mixed-AutoRound/MiniMax-M2-REAP-172B-A10B-Q2_K_S.gguf
 
 NGL_NUM=9999
 #NGL_NUM=40 #9999
@@ -32,13 +33,13 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
 #--cpu-moe
 # Q6K 180p/s 30t/s (can code but not very good)
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 262144 \
     --cache-ram -1 \
     --host 127.0.0.1 --port 5051 \
     -ngl $NGL_NUM -fa on \
-    -ctk q4_1 -ctv q4_1 -kvu  \
+    -ctk q4_1 -ctv q4_1 -kvu  --cpu-moe \
     -t 23 -tb 23 \
     --jinja --reasoning-format deepseek --reasoning-budget -1 \
-    --temp 1.0 --top-k 40 --top-p 0.95 --min-p 0.01 --seed 3407
+    --temp .7 --top-k 20 --top-p 0.95 --min-p 0.01

@@ -9,11 +9,10 @@ conda activate llamacpp
 #MODEL_NAME=Qwen/Qwen3-30B-A3B-Instruct-2507-Q8_0.gguf
 #MODEL_NAME=GLM/AutoGLM-Phone-9B.Q8_0.gguf
 #MODEL_NAME=GLM/GLM-4.7-Flash-Q6_K.gguf
-MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-Q8_0.gguf
-#MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-UD-IQ1_M.gguf
-#MODEL_NAME=Qwen/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
-#MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf
-#MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q8_0.gguf
+#MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-Q8_0.gguf
+#MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-GGUF/GLM-4.7-Flash-REAP-23B-A3B-Q6_K.gguf
+#MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-GGUF/GLM-4.7-Flash-REAP-23B-A3B-Q4_K_M.gguf
+MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-GGUF/GLM-4.7-Flash-REAP-23B-A3B-UD-Q6_K_XL.gguf
 
 
 NGL_NUM=9999
@@ -27,13 +26,13 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #-sm row # row split is slower than pipeline split 
 #--special
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 128000 -cb -n -1 \
-    --cache-ram -1 --mlock \
+    --cache-ram -1 \
     -ctk q4_1 -ctv q4_1 -kvu \
     --host 127.0.0.1 --port 5051 --parallel -1 \
     -ngl $NGL_NUM -fa on \
-    --threads 44 \
-    --jinja --reasoning-format deepseek \
+    -t 23 -tb 23 \
+    --jinja --reasoning-format deepseek --reasoning-budget -1  \
     --temp 0.6 --top-k 20 --top-p 0.95 --min-p 0

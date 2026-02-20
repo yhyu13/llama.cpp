@@ -34,6 +34,6 @@ CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./build/bin/llama-
     -ctk q4_1 -ctv q4_1 -kvu \
     --host 127.0.0.1 --port 5051 --parallel -1 \
     -ngl $NGL_NUM -fa on \
-    --threads 44 \
-    --jinja --reasoning-format deepseek \
+    -t 23 -tb 23 \
+    --jinja --reasoning-format deepseek --reasoning-budget -1  \
     --temp 0.6 --top-k 20 --top-p 0.95 --min-p 0

@@ -16,8 +16,8 @@ conda activate llamacpp
 #MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q8_0.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q6_K_merge.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q8_0_merge.gguf
-#MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Qwen3-Coder-Next-UD-Q3_K_XL.gguf
-MODEL_NAME=Qwen/Qwen3-Coder-Next-REAP-48B-A3B-MXFP4_MOE-GGUF/Qwen3-Coder-Next-REAP-48B-A3B-MXFP4_MOE.gguf
+#MODEL_NAME=Qwen/Qwen3-VL-8B-Thinking-1M-GGUF/Qwen3-VL-8B-Thinking-1M-UD-Q8_K_XL.gguf
+MODEL_NAME=Qwen/Qwen3-VL-8B-Thinking-1M-GGUF/Qwen3-VL-8B-Thinking-1M-Q6_K.gguf
 
 NGL_NUM=9999
 #NGL_NUM=40 #9999
@@ -30,15 +30,14 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #-sm row # row split is slower than pipeline split 
 #--special
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
-#--cpu-moe
-# Q6K 180p/s 30t/s (can code but not very good)
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 262144 \
     --cache-ram -1 \
     --host 127.0.0.1 --port 5051 \
     -ngl $NGL_NUM -fa on \
-    -ctk q4_1 -ctv q4_1 -kvu  \
+    -ctk q4_1 -ctv q4_1 -kvu \
     -t 23 -tb 23 \
-    --jinja --reasoning-format deepseek --reasoning-budget -1 \
-    --temp 1.0 --top-k 40 --top-p 0.95 --min-p 0.01 --seed 3407
+    --jinja --reasoning-format deepseek \
+    --temp .7 --top-k 20 --top-p 0.95 --min-p 0.01 \
+    --mmproj /media/home/hangyu5/Documents/Hugging-Face/Qwen/Qwen3-VL-8B-Thinking-1M-GGUF/mmproj-BF16.gguf
