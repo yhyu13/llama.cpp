@@ -13,7 +13,8 @@ conda activate llamacpp
 #MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-UD-IQ1_M.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
 #MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf
-MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q8_0.gguf
+#MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q8_0.gguf
+MODEL_NAME=Qwen/Fortytwo_Strand-Rust-Coder-14B-v1-Q8_0.gguf
 
 
 NGL_NUM=9999
@@ -27,13 +28,13 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #-sm row # row split is slower than pipeline split 
 #--special
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
-./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
-    -c 1048576 -cb -n -1 \
-    --cache-ram -1 --mlock \
-    -ctk q8_0 -ctv q8_0 \
-    --host 127.0.0.1 --port 5051 --parallel -1 \
+    -c 0 \
+    --cache-ram -1 \
+    --host 127.0.0.1 --port 5051 \
     -ngl $NGL_NUM -fa on \
-    --threads 32 \
-    --jinja --reasoning-format deepseek \
-    --temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
+    -ctk q4_1 -ctv q4_1 -kvu  \
+    -t 23 -tb 23 \
+    --jinja --reasoning-format deepseek --reasoning-budget -1 \
+    --temp 1.0 --top-k 40 --top-p 0.95 --min-p 0.01 --seed 3407

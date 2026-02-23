@@ -12,9 +12,12 @@ conda activate llamacpp
 #MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-Q8_0.gguf
 #MODEL_NAME=GLM/GLM-4.7-Flash-REAP-23B-A3B-UD-IQ1_M.gguf
 #MODEL_NAME=Qwen/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
-MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf
+#MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf
 #MODEL_NAME=Nvidia/Nemotron-3-Nano-30B-A3B-Q8_0.gguf
-
+#MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q6_K_merge.gguf
+#MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Q8_0_merge.gguf
+#MODEL_NAME=Qwen/Qwen3-Coder-Next-GGUF/Qwen3-Coder-Next-UD-Q3_K_XL.gguf
+MODEL_NAME=mistral/Devstral-2-123B-Instruct-2512-GGUF/Devstral-2-123B-Instruct-2512-UD-IQ2_XXS.gguf
 
 NGL_NUM=9999
 #NGL_NUM=40 #9999
@@ -22,18 +25,20 @@ NGL_NUM=9999
 
 MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 
-#https://qwen.readthedocs.io/en/latest/run_locally/llama.cpp.html
+#https://unsloth.ai/docs/models/qwen3-coder-next#llama-server-serving-and-deployment
 #-v \
 #-sm row # row split is slower than pipeline split 
 #--special
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./build/bin/llama-server \
+#--cpu-moe
+# 500p/s 10t/s (can code very good)
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./build/bin/llama-server \
     -m $MODEL_PATH \
-    -c 12800 -cb -n -1 \
-    --cache-ram -1 --mlock \
-    -ctk q4_1 -ctv q4_1 -kvu \
-    --host 127.0.0.1 --port 5051 --parallel -1 \
+    -c 128000 \
+    --cache-ram -1 \
+    --host 127.0.0.1 --port 5051 \
     -ngl $NGL_NUM -fa on \
+    -ctk q4_1 -ctv q4_1 -kvu  \
     -t 23 -tb 23 \
-    --jinja --reasoning-format deepseek --reasoning-budget -1  \
-    --temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
+    --jinja --reasoning-format deepseek --reasoning-budget -1 \
+    --temp 1.0 --top-k 40 --top-p 0.95 --min-p 0.01 --seed 3407

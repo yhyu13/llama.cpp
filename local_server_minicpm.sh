@@ -20,7 +20,7 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
     --rope-scaling yarn --rope-scale 8 \
-    -c 32000 -cb -n -1 \
+    -c 0 -cb -n -1 \
     --cache-ram -1 \
     -ctk q4_1 -ctv q4_1 -kvu \
     --port 5051 \

@@ -17,12 +17,12 @@ NGL_NUM=9999
 
 MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 # Q6K 6000p/s 120t/s (mainly for doc reading, cannot code)
+#    --temp .6 --top-k 40 --top-p 0.95 --min-p 0.01 \
 CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1 ./build/bin/llama-server \
     -m $MODEL_PATH \
-    -c 262144 -cb -n -1 \
+    -c 0 -cb -n -1 \
     --cache-ram -1 \
     -ctk q4_1 -ctv q4_1 -kvu \
     --port 5051 \
-    --jinja --reasoning-format deepseek --reasoning-budget 0 \
-    --temp .6 --top-k 20 --top-p 0.95 --min-p 0.01 \
+    --jinja --reasoning-format deepseek --reasoning-budget -1 \
     -ngl $NGL_NUM
