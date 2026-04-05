@@ -32,7 +32,7 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
 #--cpu-moe
 # 2500p/s 70t/s (can code but not very good)
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1,0 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 0 \
     --cache-ram -1 \

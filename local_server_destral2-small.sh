@@ -32,13 +32,13 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
 #--cpu-moe
 # 3000p/s 20t/s (can code and very good)
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1,0 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 128000 \
     --cache-ram -1 \
     --host 127.0.0.1 --port 5051 \
     -ngl $NGL_NUM -fa on \
-    -ctk q4_1 -ctv q4_1 -kvu  \
+    -ctk q5_1 -ctv q5_1 -kvu  \
     -t 23 -tb 23 \
-    --jinja --reasoning-format deepseek --reasoning-budget -1 \
+    --no-jinja --reasoning-format deepseek --reasoning-budget -1 \
     --temp 1.0 --top-k 40 --top-p 0.95 --min-p 0.01 --seed 3407

@@ -27,7 +27,7 @@ MODEL_PATH=/media/home/hangyu5/Documents/Hugging-Face/$MODEL_NAME
 #-sm row # row split is slower than pipeline split 
 #--special
 #--temp 0.6 --top-k 20 --top-p 0.95 --min-p 0
-CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./build/bin/llama-server \
+CUDA_SCALE_LAUNCH_QUEUES=4x GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=1,0 ./build/bin/llama-server \
     -m $MODEL_PATH \
     -c 12800 -cb -n -1 \
     --cache-ram -1 --mlock \
